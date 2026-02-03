@@ -1,0 +1,75 @@
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
+
+export default function HomeScreen() {
+  const handleCamera = () => {
+    // TODO: 카메라 권한 요청 후 촬영
+  }
+
+  const handleGallery = () => {
+    // TODO: 갤러리에서 이미지 선택
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Fiterior</Text>
+        <Text style={styles.subtitle}>AI로 인테리어를 상상해보세요</Text>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleCamera}>
+            <Ionicons name="camera-outline" size={40} color="#333" />
+            <Text style={styles.buttonText}>사진 촬영</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleGallery}>
+            <Ionicons name="image-outline" size={40} color="#333" />
+            <Text style={styles.buttonText}>갤러리에서 선택</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 60,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 20,
+  },
+  button: {
+    width: 140,
+    height: 140,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
+})
