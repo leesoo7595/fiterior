@@ -36,11 +36,12 @@ npm run web        # 웹 버전 실행
 
 ### 현재 사용 중
 
-- Expo 54 (Managed Workflow)
-- React Native 0.81
-- React 19 (New Architecture)
+- Expo 55 (Managed Workflow, preview)
+- React Native 0.83
+- React 19.2 (New Architecture)
 - TypeScript (strict mode)
 - expo-router (파일 기반 라우팅)
+- expo-image-picker (이미지 선택)
 
 ### 도입 예정
 
