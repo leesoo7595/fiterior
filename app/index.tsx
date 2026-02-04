@@ -1,14 +1,47 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import * as ImagePicker from 'expo-image-picker'
 
 export default function HomeScreen() {
-  const handleCamera = () => {
-    // TODO: 카메라 권한 요청 후 촬영
+  const handleCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert('권한 필요', '카메라 사용을 위해 권한이 필요합니다.')
+      return
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+    })
+
+    if (!result.canceled && result.assets[0]) {
+      const imageUri = result.assets[0].uri
+      // TODO: 다음 화면으로 이동
+      console.log('선택된 이미지:', imageUri)
+    }
   }
 
-  const handleGallery = () => {
-    // TODO: 갤러리에서 이미지 선택
+  const handleGallery = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert('권한 필요', '갤러리 접근을 위해 권한이 필요합니다.')
+      return
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+    })
+
+    if (!result.canceled && result.assets[0]) {
+      const imageUri = result.assets[0].uri
+      // TODO: 다음 화면으로 이동
+      console.log('선택된 이미지:', imageUri)
+    }
   }
 
   return (
