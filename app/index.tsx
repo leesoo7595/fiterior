@@ -2,8 +2,11 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
+import { useRouter } from 'expo-router'
 
 export default function HomeScreen() {
+  const router = useRouter()
+
   const handleCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync()
     if (status !== 'granted') {
@@ -13,14 +16,12 @@ export default function HomeScreen() {
 
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ['images'],
-      allowsEditing: true,
       quality: 0.8,
     })
 
     if (!result.canceled && result.assets[0]) {
       const imageUri = result.assets[0].uri
-      // TODO: 다음 화면으로 이동
-      console.log('선택된 이미지:', imageUri)
+      router.push({ pathname: '/prompt', params: { imageUri } })
     }
   }
 
@@ -39,8 +40,7 @@ export default function HomeScreen() {
 
     if (!result.canceled && result.assets[0]) {
       const imageUri = result.assets[0].uri
-      // TODO: 다음 화면으로 이동
-      console.log('선택된 이미지:', imageUri)
+      router.push({ pathname: '/prompt', params: { imageUri } })
     }
   }
 
