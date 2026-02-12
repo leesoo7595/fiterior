@@ -22,8 +22,7 @@ export default function PromptScreen() {
 
   const handleConfirm = () => {
     if (!selectedTheme) return
-    // TODO: 다음 화면(AI 변환)으로 이동
-    console.log('변환 시작:', { imageUri, theme: selectedTheme.id })
+    router.push({ pathname: '/model-select', params: { imageUri, themeId: selectedTheme.id } })
   }
 
   const renderThemeCard = ({ item }: { item: Theme }) => {
