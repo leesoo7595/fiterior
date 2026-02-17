@@ -19,8 +19,14 @@ export default function ModelSelectScreen() {
 
   const handleStart = () => {
     if (!selectedModel) return
-    // TODO: AI 변환 화면으로 이동
-    console.log('변환 시작:', { imageUri, themeId, model: selectedModel.id })
+    router.push({
+      pathname: '/loading',
+      params: {
+        imageUri,
+        themeId,
+        modelId: selectedModel.id,
+      },
+    })
   }
 
   const renderModelCard = ({ item }: { item: Model }) => {

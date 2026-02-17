@@ -14,6 +14,8 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="prompt" />
         <Stack.Screen name="model-select" />
+        <Stack.Screen name="loading" />
+        <Stack.Screen name="result" />
       </Stack>
     </>
   )
