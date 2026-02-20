@@ -1,10 +1,19 @@
-import { useMemo } from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { useMemo, useState } from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { THEMES } from '../constants/themes'
 import { MODELS } from '../constants/models'
+
+type ViewMode = 'compare' | 'before' | 'after'
 
 export default function ResultScreen() {
   const { resultUrl, imageUri, themeId, modelId } = useLocalSearchParams<{
@@ -18,9 +27,13 @@ export default function ResultScreen() {
   const selectedTheme = useMemo(() => THEMES.find((t) => t.id === themeId), [themeId])
   const selectedModel = useMemo(() => MODELS.find((m) => m.id === modelId), [modelId])
 
+  const [viewMode, setViewMode] = useState<ViewMode>('compare')
+
   const handleRetry = () => {
     router.replace('/')
   }
+
+  const hasComparison = !!imageUri && !!resultUrl
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,8 +48,58 @@ export default function ResultScreen() {
 
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>결과 이미지</Text>
-          {resultUrl ? (
-            <Image source={{ uri: resultUrl }} style={styles.image} resizeMode="cover" />
+
+          {hasComparison && (
+            <View style={styles.tabBar}>
+              <TouchableOpacity
+                style={[styles.tab, viewMode === 'compare' && styles.tabActive]}
+                onPress={() => setViewMode('compare')}
+              >
+                <Text style={[styles.tabText, viewMode === 'compare' && styles.tabTextActive]}>
+                  비교
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab, viewMode === 'before' && styles.tabActive]}
+                onPress={() => setViewMode('before')}
+              >
+                <Text style={[styles.tabText, viewMode === 'before' && styles.tabTextActive]}>
+                  원본
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab, viewMode === 'after' && styles.tabActive]}
+                onPress={() => setViewMode('after')}
+              >
+                <Text style={[styles.tabText, viewMode === 'after' && styles.tabTextActive]}>
+                  변환
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {hasComparison && viewMode === 'compare' ? (
+            <View style={styles.compareContainer}>
+              <View style={styles.compareHalf}>
+                <Image source={{ uri: imageUri }} style={styles.compareImage} resizeMode="cover" />
+                <View style={styles.labelBefore}>
+                  <Text style={styles.labelText}>Before</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.compareHalf}>
+                <Image source={{ uri: resultUrl }} style={styles.compareImage} resizeMode="cover" />
+                <View style={styles.labelAfter}>
+                  <Text style={styles.labelText}>After</Text>
+                </View>
+              </View>
+            </View>
+          ) : resultUrl ? (
+            <Image
+              source={{ uri: viewMode === 'before' ? imageUri : resultUrl }}
+              style={styles.image}
+              resizeMode="cover"
+            />
           ) : (
             <View style={styles.placeholder}>
               <Ionicons name="image-outline" size={32} color="#9CA3AF" />
@@ -106,12 +169,81 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#0F172A',
   },
+  tabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    padding: 3,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 7,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  tabActive: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#94A3B8',
+  },
+  tabTextActive: {
+    color: '#0F172A',
+  },
   image: {
     marginTop: 4,
     width: '100%',
     aspectRatio: 4 / 3,
     borderRadius: 12,
     backgroundColor: '#E5E7EB',
+  },
+  compareContainer: {
+    marginTop: 4,
+    flexDirection: 'row',
+    borderRadius: 12,
+    overflow: 'hidden',
+    aspectRatio: 8 / 3,
+  },
+  compareHalf: {
+    flex: 1,
+  },
+  compareImage: {
+    width: '100%',
+    height: '100%',
+  },
+  divider: {
+    width: 2,
+    backgroundColor: '#fff',
+  },
+  labelBefore: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  labelAfter: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  labelText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#fff',
   },
   placeholder: {
     marginTop: 8,
